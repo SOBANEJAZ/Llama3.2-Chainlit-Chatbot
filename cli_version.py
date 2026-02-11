@@ -4,20 +4,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY"),
-)
+# Initialize Groq client (auto-detects GROQ_API_KEY from environment)
+client = Groq()
+
+# Model configuration
+MODEL = "llama-3.3-70b-versatile"
 
 # Initialize conversation history
 conversation_history = [
     {"role": "system", "content": "You are a famous podcaster, Andrew Huberman."}
 ]
 
-def chat(user_input):
+
+def chat(user_input: str) -> str:
+    """Send a message and stream the response."""
     conversation_history.append({"role": "user", "content": user_input})
 
     stream = client.chat.completions.create(
-        messages=conversation_history, model="llama-3.2-90b-vision-preview", stream=True
+        messages=conversation_history,
+        model=MODEL,
+        stream=True,
     )
 
     full_response = ""
@@ -29,23 +35,29 @@ def chat(user_input):
     print()  # New line after response
 
     conversation_history.append({"role": "assistant", "content": full_response})
-
     return full_response
 
 
-def view_history():
+def view_history() -> None:
+    """Display the conversation history."""
     for message in conversation_history:
         print(f"{message['role'].upper()}: {message['content']}\n")
 
 
-# Looping
-print("Chat started (type 'quit' to exit, 'history' to view conversation history)")
-while True:
-    user_input = input("\nYou: ").strip()
+def main() -> None:
+    """Main chat loop."""
+    print("Chat started (type 'quit' to exit, 'history' to view conversation history)")
+    
+    while True:
+        user_input = input("\nYou: ").strip()
 
-    if user_input.lower() == "quit":
-        break
-    elif user_input.lower() == "history":
-        view_history()
-    elif user_input:
-        chat(user_input)
+        if user_input.lower() == "quit":
+            break
+        elif user_input.lower() == "history":
+            view_history()
+        elif user_input:
+            chat(user_input)
+
+
+if __name__ == "__main__":
+    main()
