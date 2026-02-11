@@ -15,19 +15,19 @@ A chatbot using the Llama 3.3 model through the Groq API with a Chainlit web int
 ### 2. Install Dependencies
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 3. Run
 
 **Chainlit UI:**
 ```bash
-chainlit run app.py -w
+uv run chainlit run app.py -w
 ```
 
 **CLI Version:**
 ```bash
-python cli_version.py
+uv run python cli_version.py
 ```
 
 ## Features
